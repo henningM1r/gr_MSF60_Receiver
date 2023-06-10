@@ -3,7 +3,7 @@ This is a basic MSF60 receiver for GNU Radio, containing:
 1. signal demodulation and detection of the MSF60 OOK signal with an SDR using GNU Radio (and Python modules)
 2. a simple live decoder of the received OOK bits provided by the GNU Radio MSF60 receiver
 
-__MSF60__ (from the National Physics Laboratory (NPL) is one of the the __UK time signals__ in Anthorn, Cumbria, UK.
+__MSF60__ (from the National Physics Laboratory (NPL) is one of the __UK time signals__ in Anthorn, Cumbria, UK.)
 
 ### Overview
 The __flowgraphs__ are provided in the `examples` folder:
@@ -26,6 +26,7 @@ The MSF60 receiver was tested with:
 + The user might also need some antenna cables and adapters to connect the SDR with the antenna.
 + This project has been successfully tested in:
     + Ubuntu 22.04.2 LTS (recommended)
+    + Windows 11
 
 ### Instructions/Setup
 
