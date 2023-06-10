@@ -1,0 +1,1111 @@
+options:
+  parameters:
+    author: henningM1r
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: MSF60_Receiver
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: MSF60 Receiver
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: cutoff
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: LP cut-off
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '5'
+    step: '1'
+    stop: '50'
+    value: '10'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [680, 12.0]
+    rotation: 0
+    state: true
+- name: decimation
+  id: variable
+  parameters:
+    comment: ''
+    value: '15'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [296, 12.0]
+    rotation: 0
+    state: true
+- name: freq_MSF60
+  id: variable
+  parameters:
+    comment: ''
+    value: '60000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [200, 76.0]
+    rotation: 0
+    state: true
+- name: gain
+  id: variable_qtgui_range
+  parameters:
+    comment: 'Amplify receving
+
+      signal power'
+    gui_hint: (2,0)
+    label: Recv Gain
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '1'
+    step: '1'
+    stop: '10000'
+    value: '5000'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [400, 12.0]
+    rotation: 0
+    state: true
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '192000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [200, 12.0]
+    rotation: 0
+    state: enabled
+- name: thres
+  id: variable_qtgui_range
+  parameters:
+    comment: 'Adapt the upper threshold
+
+      so that the one value is
+
+      provided each time the
+
+      signal is high'
+    gui_hint: (1,0)
+    label: Threshold
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '0'
+    step: '10'
+    stop: '5000'
+    value: '2500'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [528, 12.0]
+    rotation: 0
+    state: true
+- name: variable_low_pass_filter_taps_1
+  id: variable_low_pass_filter_taps
+  parameters:
+    beta: '6.76'
+    comment: ''
+    cutoff_freq: '600'
+    gain: '500'
+    samp_rate: samp_rate
+    width: '150'
+    win: window.WIN_RECTANGULAR
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [408, 484.0]
+    rotation: 0
+    state: enabled
+- name: width
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: LP width
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '25'
+    step: '1'
+    stop: '150'
+    value: '35'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 12.0]
+    rotation: 0
+    state: true
+- name: analog_sig_source_x_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: thres
+    comment: only to display threshold
+    freq: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    type: float
+    waveform: analog.GR_CONST_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1000, 708.0]
+    rotation: 0
+    state: true
+- name: blocks_complex_to_mag_squared_0
+  id: blocks_complex_to_mag_squared
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [992, 384.0]
+    rotation: 0
+    state: true
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    en_uvec: 'True'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1336, 640.0]
+    rotation: 0
+    state: disabled
+- name: blocks_message_debug_0_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    en_uvec: 'True'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1616, 664.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_const_vxx_1
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: 'is only scaled to be
+
+      visible in output'
+    const: '3500'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1024, 452.0]
+    rotation: 0
+    state: true
+- name: blocks_threshold_ff_0
+  id: blocks_threshold_ff
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: 'Decide if received
+
+      value is zero or one'
+    high: thres
+    init: '1'
+    low: thres
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [800, 500.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_0
+  id: epy_block
+  parameters:
+    _source_code: "\nimport numpy as np\nfrom gnuradio import gr\nimport pmt\n\n\n\
+      # counted number of one samples\n_num_ones = 0\n\n# counted number of zero samples\n\
+      _num_zeros = 0\n\nclass MSF60_BitDetector_blk(gr.sync_block):\n\n    def __init__(self,\
+      \ sample_rate=12800, tolerance=0.02):\n        gr.sync_block.__init__(\n   \
+      \         self,\n            name='MSF60\\nBit Detector',\n            in_sig=[np.float32],\n\
+      \            out_sig=[np.float32]\n        )\n\n        # block paramters\n\
+      \        # NOTE: use decimated sample rate: samp_rate/decimation\n        self.sample_rate\
+      \ = sample_rate\n\n        # messaging port\n        self.message_port_register_out(pmt.intern('msg_out'))\n\
+      \n        # timing tolerance value, if the sampled frame is\n        # slightly\
+      \ shorter/longer hant the defined duration\n        self._tolerance = self.sample_rate*tolerance\n\
+      \n        self._sec = self.sample_rate * 0.1\n        self._sec_lo = self._sec\
+      \ - self._tolerance\n\n        self.queue_len = 2\n        self.queue = gr.msg_queue(self.queue_len)\n\
+      \n    def work(self, input_items, output_items):\n        inp = input_items[0]\n\
+      \        out = output_items[0]\n\n        out[:] = self.extract_bits(inp)\n\n\
+      \        # forward input tagged signal\n        return len(out)\n\n    def send_msg(self,\
+      \ val, num):\n        # handles both the message ouput queue\n        # and\
+      \ the message transmission\n        _msg = \"\"\n\n        if num > 0:\n   \
+      \         for i in range(0, num):\n                _msg += val\n\n         \
+      \   # convert python string to message\n            msg1_in = gr.message_from_string(_msg)\n\
+      \n            # insert message into queue\n            self.queue.insert_tail(msg1_in)\n\
+      \n        msg_list = [0]*self.queue_len\n\n        # send a combination of all\
+      \ messages contained in queue\n        if self.queue.full_p():\n           \
+      \ for idx in range(0, self.queue_len):\n                msg_list[idx] = self.queue.delete_head().\\\
+      \n                                     to_string().decode(\"utf-8\")\n\n   \
+      \         msg1_out = \"\".join(map(str, msg_list))\n            self.message_port_pub(pmt.intern(\"\
+      msg_out\"),\n                                  pmt.intern(msg1_out))\n\n   \
+      \ def clear_counters(self):\n        global _num_ones\n        global _num_zeros\n\
+      \n        # reset counters\n        _num_ones = 0\n        _num_zeros = 0\n\n\
+      \    def extract_bits(self, inp):\n        global _num_ones\n        global\
+      \ _num_zeros\n\n        out = np.zeros(len(inp))\n\n        for idx, ch in enumerate(inp):\n\
+      \            # increment current counters of zeros and ones correspondingly\n\
+      \            if (ch == 1):\n                _num_ones += 1\n            else:\
+      \   # ch == 0\n                _num_zeros += 1\n\n            # triggers upon\
+      \ first one after multiple zeros\n            if (ch == 1 and\n            \
+      \    _num_zeros >= self._sec_lo):\n\n                _num = round(_num_zeros/self._sec)\n\
+      \n                key = pmt.intern(\"\")\n                value = pmt.intern(f\"\
+      0,{_num}\")\n                self.add_item_tag(0,\n                        \
+      \          self.nitems_written(0) + idx,\n                                 \
+      \ key,\n                                  value)\n\n                self.send_msg(val=\"\
+      0,\", num=_num)\n\n                self.clear_counters()\n\n            # triggers\
+      \ upon first zero after multiple ones\n            elif (ch == 0 and\n     \
+      \           _num_ones >= self._sec_lo):\n\n                _num = round(_num_ones/self._sec)\n\
+      \n                key = pmt.intern(\"\")\n                value = pmt.intern(f\"\
+      1,{_num}\")\n                self.add_item_tag(0,\n                        \
+      \          self.nitems_written(0) + idx,\n                                 \
+      \ key,\n                                  value)\n\n                self.send_msg(val=\"\
+      1,\", num=_num)\n\n                self.clear_counters()  \n\n        # return\
+      \ (float) signal block\n        return out\n"
+    affinity: ''
+    alias: MSF60_Bit_Detector
+    comment: 'Detects MSF60
+
+      OOK Symbols:
+
+      * second marker
+
+      * minute marker
+
+      * A bit (0 or 1)
+
+      * B bit (0 or 1)'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    sample_rate: int(samp_rate/decimation)
+    tolerance: '0.03'
+  states:
+    _io_cache: ('MSF60\nBit Detector', 'MSF60_BitDetector_blk', [('sample_rate', '12800'),
+      ('tolerance', '0.02')], [('0', 'float', 1)], [('0', 'float', 1), ('msg_out',
+      'message', 1)], '', ['sample_rate'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1008, 540.0]
+    rotation: 0
+    state: true
+- name: epy_block_1
+  id: epy_block
+  parameters:
+    _source_code: "\nimport numpy as np\nfrom gnuradio import gr\nimport pmt\nfrom\
+      \ scipy.spatial.distance import hamming\n\n\n# sliding window for selected messages\n\
+      _msg_window = np.empty(shape=(1, 1))\n\nclass MSF60_correlator_blk(gr.sync_block):\n\
+      \n    def __init__(self):\n        gr.basic_block.__init__(\n            self,\n\
+      \            name=\"MSF60\\nCorrelator\",\n            in_sig=None,\n      \
+      \      out_sig=None)\n \n        # prepare in and out ports for messages\n \
+      \       self.message_port_register_out(pmt.intern('msg_out'))\n        self.message_port_register_in(pmt.intern('msg_in'))\n\
+      \        self.set_msg_handler(pmt.intern('msg_in'), self.handle_msg)\n\n   \
+      \     # MSF60:\n        # 1st bit: second marker\n        # 2nd bit: A bit\n\
+      \        # 3rd bit: B bit\n        self.code_dict = {\n                    \
+      \        \"00\": (0,1,1,1,1,1,1,1,1,1),\n                            \"10\"\
+      : (0,0,1,1,1,1,1,1,1,1),\n                            \"11\": (0,0,0,1,1,1,1,1,1,1),\n\
+      \                            \"01\": (0,1,0,1,1,1,1,1,1,1),\n              \
+      \              \"2\":  (0,0,0,0,0,1,1,1,1,1),\n                         }\n\n\
+      \        self.symbol_code_swap_dict = \\\n            {v: k for k, v in self.code_dict.items()}\n\
+      \n        self.cw_len = 10\n\n    def prepare_window(self, msg):\n        global\
+      \ _msg_window\n\n        # message contains the whole sequence of a received\
+      \ second\n        msg = pmt.to_python(msg)\n\n        # first put each string\
+      \ into an array (separated by comma)\n        received_msg = msg.split(\",\"\
+      )\n\n        # truncate last element (\"\") from list\n        received_msg\
+      \ = received_msg[:-1]\n\n        # convert to numpy-array\n        np_recv_seq\
+      \ = np.array(received_msg)\n\n        # turn each array element into an integer\
+      \ value\n        np_recv_seq = np.asarray(np_recv_seq, dtype=np.int32)\n\n \
+      \       _msg_window = np.append(_msg_window, np_recv_seq)\n\n    def compare_code(self,\
+      \ window, cw_len):\n        min_dist = cw_len\n        idx = 0\n        res_cw\
+      \ = None\n\n        # decision metric: compare window with codewords\n     \
+      \   # using the Hamming-metric\n        for offset in range(0, max(1, len(window)\
+      \ - cw_len + 1)):\n\n            for codeword in self.symbol_code_swap_dict:\n\
+      \                # turn tuple into numpy array\n                np_cw = np.array(list(codeword))\n\
+      \                dist = hamming(window[offset:offset + cw_len], np_cw)\n\n \
+      \               # update (reduce) current minimum\n                if min_dist\
+      \ > dist:\n                    min_dist = dist\n\n                # check decision\
+      \ threshold for minimum\n                if min_dist == 0.0:\n             \
+      \       idx = offset\n                    res_cw = self.symbol_code_swap_dict[codeword]\n\
+      \                    return [res_cw, idx]\n\n        # no codeword detected\n\
+      \        if min_dist > 0.0:\n            idx = 0\n            res_cw = None\n\
+      \n        return [res_cw, idx]\n\n    def handle_msg(self, msg):\n        global\
+      \ _msg_window\n\n        self.prepare_window(msg)\n        codeword = None\n\
+      \n        if len(_msg_window) >= 10:\n            cur_window = _msg_window.copy()\n\
+      \n            [codeword, idx] = \\\n                self.compare_code(\n   \
+      \             window= cur_window,\n                cw_len=self.cw_len)\n\n \
+      \           if codeword != None:\n                msg1_out = codeword\n    \
+      \            self.message_port_pub(pmt.intern(\"msg_out\"),\n              \
+      \                        pmt.intern(msg1_out))\n                # truncate sliding\
+      \ window \n                _msg_window = _msg_window[idx + self.cw_len:]\n\n\
+      \            else:\n                # no codeword detected\n               \
+      \ # truncate sliding window \n                _msg_window = _msg_window[9:]\
+      \        \n\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('MSF60\nCorrelator', 'MSF60_correlator_blk', [], [('msg_in', 'message',
+      1)], [('msg_out', 'message', 1)], '', [])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1344, 572.0]
+    rotation: 0
+    state: true
+- name: freq_xlating_fir_filter_xxx_0_0
+  id: freq_xlating_fir_filter_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    center_freq: '0'
+    comment: 'Demodulation from 60 kHz
+
+      down to the base band.'
+    decim: decimation
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_rate: samp_rate
+    taps: variable_low_pass_filter_taps_1
+    type: ccc
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [408, 356.0]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: Windows needs the import of zmq
+    imports: import zmq
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [200, 140.0]
+    rotation: 0
+    state: true
+- name: low_pass_filter_0_0
+  id: low_pass_filter
+  parameters:
+    affinity: ''
+    alias: ''
+    beta: '6.76'
+    comment: dense low-pass filter
+    cutoff_freq: cutoff
+    decim: '1'
+    gain: gain
+    interp: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_rate: int(samp_rate/decimation)
+    type: fir_filter_ccf
+    width: width
+    win: window.WIN_BLACKMAN
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [720, 332.0]
+    rotation: 0
+    state: true
+- name: note_0
+  id: note
+  parameters:
+    alias: ''
+    comment: '* https://drtonyr.github.io/MSF60decoder/
+
+      * https://www.npl.co.uk/products-services/time-frequency/msf-radio-time-signal/msf_time_date_code
+
+      * https://en.wikipedia.org/wiki/Time_from_NPL_(MSF)'
+    note: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [944, 12.0]
+    rotation: 0
+    state: true
+- name: osmosdr_source_0
+  id: osmosdr_source
+  parameters:
+    affinity: ''
+    alias: ''
+    ant0: ''
+    ant1: ''
+    ant10: ''
+    ant11: ''
+    ant12: ''
+    ant13: ''
+    ant14: ''
+    ant15: ''
+    ant16: ''
+    ant17: ''
+    ant18: ''
+    ant19: ''
+    ant2: ''
+    ant20: ''
+    ant21: ''
+    ant22: ''
+    ant23: ''
+    ant24: ''
+    ant25: ''
+    ant26: ''
+    ant27: ''
+    ant28: ''
+    ant29: ''
+    ant3: ''
+    ant30: ''
+    ant31: ''
+    ant4: ''
+    ant5: ''
+    ant6: ''
+    ant7: ''
+    ant8: ''
+    ant9: ''
+    args: airspyhf=0
+    bb_gain0: '35'
+    bb_gain1: '20'
+    bb_gain10: '20'
+    bb_gain11: '20'
+    bb_gain12: '20'
+    bb_gain13: '20'
+    bb_gain14: '20'
+    bb_gain15: '20'
+    bb_gain16: '20'
+    bb_gain17: '20'
+    bb_gain18: '20'
+    bb_gain19: '20'
+    bb_gain2: '20'
+    bb_gain20: '20'
+    bb_gain21: '20'
+    bb_gain22: '20'
+    bb_gain23: '20'
+    bb_gain24: '20'
+    bb_gain25: '20'
+    bb_gain26: '20'
+    bb_gain27: '20'
+    bb_gain28: '20'
+    bb_gain29: '20'
+    bb_gain3: '20'
+    bb_gain30: '20'
+    bb_gain31: '20'
+    bb_gain4: '20'
+    bb_gain5: '20'
+    bb_gain6: '20'
+    bb_gain7: '20'
+    bb_gain8: '20'
+    bb_gain9: '20'
+    bw0: '4000'
+    bw1: '0'
+    bw10: '0'
+    bw11: '0'
+    bw12: '0'
+    bw13: '0'
+    bw14: '0'
+    bw15: '0'
+    bw16: '0'
+    bw17: '0'
+    bw18: '0'
+    bw19: '0'
+    bw2: '0'
+    bw20: '0'
+    bw21: '0'
+    bw22: '0'
+    bw23: '0'
+    bw24: '0'
+    bw25: '0'
+    bw26: '0'
+    bw27: '0'
+    bw28: '0'
+    bw29: '0'
+    bw3: '0'
+    bw30: '0'
+    bw31: '0'
+    bw4: '0'
+    bw5: '0'
+    bw6: '0'
+    bw7: '0'
+    bw8: '0'
+    bw9: '0'
+    clock_source0: ''
+    clock_source1: ''
+    clock_source2: ''
+    clock_source3: ''
+    clock_source4: ''
+    clock_source5: ''
+    clock_source6: ''
+    clock_source7: ''
+    comment: 'frame is localized on the
+
+      center frequency of the
+
+      MSF60 signal'
+    corr0: '0'
+    corr1: '0'
+    corr10: '0'
+    corr11: '0'
+    corr12: '0'
+    corr13: '0'
+    corr14: '0'
+    corr15: '0'
+    corr16: '0'
+    corr17: '0'
+    corr18: '0'
+    corr19: '0'
+    corr2: '0'
+    corr20: '0'
+    corr21: '0'
+    corr22: '0'
+    corr23: '0'
+    corr24: '0'
+    corr25: '0'
+    corr26: '0'
+    corr27: '0'
+    corr28: '0'
+    corr29: '0'
+    corr3: '0'
+    corr30: '0'
+    corr31: '0'
+    corr4: '0'
+    corr5: '0'
+    corr6: '0'
+    corr7: '0'
+    corr8: '0'
+    corr9: '0'
+    dc_offset_mode0: '0'
+    dc_offset_mode1: '0'
+    dc_offset_mode10: '0'
+    dc_offset_mode11: '0'
+    dc_offset_mode12: '0'
+    dc_offset_mode13: '0'
+    dc_offset_mode14: '0'
+    dc_offset_mode15: '0'
+    dc_offset_mode16: '0'
+    dc_offset_mode17: '0'
+    dc_offset_mode18: '0'
+    dc_offset_mode19: '0'
+    dc_offset_mode2: '0'
+    dc_offset_mode20: '0'
+    dc_offset_mode21: '0'
+    dc_offset_mode22: '0'
+    dc_offset_mode23: '0'
+    dc_offset_mode24: '0'
+    dc_offset_mode25: '0'
+    dc_offset_mode26: '0'
+    dc_offset_mode27: '0'
+    dc_offset_mode28: '0'
+    dc_offset_mode29: '0'
+    dc_offset_mode3: '0'
+    dc_offset_mode30: '0'
+    dc_offset_mode31: '0'
+    dc_offset_mode4: '0'
+    dc_offset_mode5: '0'
+    dc_offset_mode6: '0'
+    dc_offset_mode7: '0'
+    dc_offset_mode8: '0'
+    dc_offset_mode9: '0'
+    freq0: freq_MSF60
+    freq1: 100e6
+    freq10: 100e6
+    freq11: 100e6
+    freq12: 100e6
+    freq13: 100e6
+    freq14: 100e6
+    freq15: 100e6
+    freq16: 100e6
+    freq17: 100e6
+    freq18: 100e6
+    freq19: 100e6
+    freq2: 100e6
+    freq20: 100e6
+    freq21: 100e6
+    freq22: 100e6
+    freq23: 100e6
+    freq24: 100e6
+    freq25: 100e6
+    freq26: 100e6
+    freq27: 100e6
+    freq28: 100e6
+    freq29: 100e6
+    freq3: 100e6
+    freq30: 100e6
+    freq31: 100e6
+    freq4: 100e6
+    freq5: 100e6
+    freq6: 100e6
+    freq7: 100e6
+    freq8: 100e6
+    freq9: 100e6
+    gain0: '35'
+    gain1: '10'
+    gain10: '10'
+    gain11: '10'
+    gain12: '10'
+    gain13: '10'
+    gain14: '10'
+    gain15: '10'
+    gain16: '10'
+    gain17: '10'
+    gain18: '10'
+    gain19: '10'
+    gain2: '10'
+    gain20: '10'
+    gain21: '10'
+    gain22: '10'
+    gain23: '10'
+    gain24: '10'
+    gain25: '10'
+    gain26: '10'
+    gain27: '10'
+    gain28: '10'
+    gain29: '10'
+    gain3: '10'
+    gain30: '10'
+    gain31: '10'
+    gain4: '10'
+    gain5: '10'
+    gain6: '10'
+    gain7: '10'
+    gain8: '10'
+    gain9: '10'
+    gain_mode0: 'True'
+    gain_mode1: 'False'
+    gain_mode10: 'False'
+    gain_mode11: 'False'
+    gain_mode12: 'False'
+    gain_mode13: 'False'
+    gain_mode14: 'False'
+    gain_mode15: 'False'
+    gain_mode16: 'False'
+    gain_mode17: 'False'
+    gain_mode18: 'False'
+    gain_mode19: 'False'
+    gain_mode2: 'False'
+    gain_mode20: 'False'
+    gain_mode21: 'False'
+    gain_mode22: 'False'
+    gain_mode23: 'False'
+    gain_mode24: 'False'
+    gain_mode25: 'False'
+    gain_mode26: 'False'
+    gain_mode27: 'False'
+    gain_mode28: 'False'
+    gain_mode29: 'False'
+    gain_mode3: 'False'
+    gain_mode30: 'False'
+    gain_mode31: 'False'
+    gain_mode4: 'False'
+    gain_mode5: 'False'
+    gain_mode6: 'False'
+    gain_mode7: 'False'
+    gain_mode8: 'False'
+    gain_mode9: 'False'
+    if_gain0: '35'
+    if_gain1: '20'
+    if_gain10: '20'
+    if_gain11: '20'
+    if_gain12: '20'
+    if_gain13: '20'
+    if_gain14: '20'
+    if_gain15: '20'
+    if_gain16: '20'
+    if_gain17: '20'
+    if_gain18: '20'
+    if_gain19: '20'
+    if_gain2: '20'
+    if_gain20: '20'
+    if_gain21: '20'
+    if_gain22: '20'
+    if_gain23: '20'
+    if_gain24: '20'
+    if_gain25: '20'
+    if_gain26: '20'
+    if_gain27: '20'
+    if_gain28: '20'
+    if_gain29: '20'
+    if_gain3: '20'
+    if_gain30: '20'
+    if_gain31: '20'
+    if_gain4: '20'
+    if_gain5: '20'
+    if_gain6: '20'
+    if_gain7: '20'
+    if_gain8: '20'
+    if_gain9: '20'
+    iq_balance_mode0: '0'
+    iq_balance_mode1: '0'
+    iq_balance_mode10: '0'
+    iq_balance_mode11: '0'
+    iq_balance_mode12: '0'
+    iq_balance_mode13: '0'
+    iq_balance_mode14: '0'
+    iq_balance_mode15: '0'
+    iq_balance_mode16: '0'
+    iq_balance_mode17: '0'
+    iq_balance_mode18: '0'
+    iq_balance_mode19: '0'
+    iq_balance_mode2: '0'
+    iq_balance_mode20: '0'
+    iq_balance_mode21: '0'
+    iq_balance_mode22: '0'
+    iq_balance_mode23: '0'
+    iq_balance_mode24: '0'
+    iq_balance_mode25: '0'
+    iq_balance_mode26: '0'
+    iq_balance_mode27: '0'
+    iq_balance_mode28: '0'
+    iq_balance_mode29: '0'
+    iq_balance_mode3: '0'
+    iq_balance_mode30: '0'
+    iq_balance_mode31: '0'
+    iq_balance_mode4: '0'
+    iq_balance_mode5: '0'
+    iq_balance_mode6: '0'
+    iq_balance_mode7: '0'
+    iq_balance_mode8: '0'
+    iq_balance_mode9: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    nchan: '1'
+    num_mboards: '1'
+    sample_rate: samp_rate
+    sync: none
+    time_source0: ''
+    time_source1: ''
+    time_source2: ''
+    time_source3: ''
+    time_source4: ''
+    time_source5: ''
+    time_source6: ''
+    time_source7: ''
+    type: fc32
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [72, 268.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_freq_sink_x_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: '1024'
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: (5,0)
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"received complex signal spectrum"'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.025'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_BLACKMAN_hARRIS
+    ymax: '30'
+    ymin: '-110'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [408, 252.0]
+    rotation: 0
+    state: disabled
+- name: qtgui_time_sink_x_0_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: 'view the noisy input signal
+
+      to set the thresholds properly'
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: (6,0)
+    label1: BB Signal
+    label10: ''
+    label2: Signal after Thresh.
+    label3: Symbols
+    label4: Thresh. Value
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: Signals
+    nconnections: '4'
+    size: int(samp_rate*4/decimation)
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '0.025'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '18000'
+    ymin: '-1000'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1312, 408.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_1
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1216, 332.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_1
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [600, 516.0]
+    rotation: 0
+    state: enabled
+- name: zeromq_push_msg_sink_0
+  id: zeromq_push_msg_sink
+  parameters:
+    address: tcp://127.0.0.1:55555
+    affinity: ''
+    alias: ''
+    bind: 'True'
+    comment: 'publish to be read by the
+
+      python tool via ZMQ for instance'
+    timeout: '500'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1560, 564.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_sig_source_x_0, '0', qtgui_time_sink_x_0_0, '3']
+- [blocks_complex_to_mag_squared_0, '0', qtgui_time_sink_x_0_0, '0']
+- [blocks_complex_to_mag_squared_0, '0', virtual_sink_1, '0']
+- [blocks_multiply_const_vxx_1, '0', qtgui_time_sink_x_0_0, '1']
+- [blocks_threshold_ff_0, '0', blocks_multiply_const_vxx_1, '0']
+- [blocks_threshold_ff_0, '0', epy_block_0, '0']
+- [epy_block_0, '0', qtgui_time_sink_x_0_0, '2']
+- [epy_block_0, msg_out, blocks_message_debug_0, print]
+- [epy_block_0, msg_out, epy_block_1, msg_in]
+- [epy_block_1, msg_out, blocks_message_debug_0_0, print]
+- [epy_block_1, msg_out, zeromq_push_msg_sink_0, in]
+- [freq_xlating_fir_filter_xxx_0_0, '0', low_pass_filter_0_0, '0']
+- [low_pass_filter_0_0, '0', blocks_complex_to_mag_squared_0, '0']
+- [osmosdr_source_0, '0', freq_xlating_fir_filter_xxx_0_0, '0']
+- [osmosdr_source_0, '0', qtgui_freq_sink_x_0, '0']
+- [virtual_source_1, '0', blocks_threshold_ff_0, '0']
+
+metadata:
+  file_format: 1
