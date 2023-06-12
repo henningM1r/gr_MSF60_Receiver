@@ -1,6 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 
-import numpy as np
 import zmq
 
 
@@ -23,7 +22,7 @@ class Class_DecodeMSF60():
         return val
 
     def decode_year(self, bits, parity):
-        B_bit = int(parity[1])
+        b_bit = int(parity[1])
         bits10 = [bits[0][0], bits[1][0], bits[2][0], bits[3][0]]
         bits10 = list(map(int, bits10))
         val10 = self.decode_BCD(bits10, 4)
@@ -34,6 +33,12 @@ class Class_DecodeMSF60():
 
         year = f"{val10}{val1}"
 
+        # check validity of digit values
+        if val10 > 9 and val1 <= 9:
+            return ["Error: 10*digit of year is > 9!", False]
+        elif (val10 <= 9 and val1 > 9):
+            return ["Error: 1*digit of year is > 9!", False]
+
         # compute odd parity
         comp_parity = (int(bits[0][0]) ^ int(bits[1][0]) ^ int(bits[2][0]) ^ 
                        int(bits[3][0]) ^ int(bits[4][0]) ^ int(bits[5][0]) ^
@@ -41,7 +46,7 @@ class Class_DecodeMSF60():
 
         year_parity = False
 
-        if comp_parity ^ B_bit == 1:
+        if comp_parity ^ b_bit == 1:
             year_parity = True
 
         return [year, year_parity]
@@ -55,12 +60,20 @@ class Class_DecodeMSF60():
         bits1 = list(map(int, bits1))
         val1 = self.decode_BCD(bits1, 4)
 
+        # check validity of digit values
+        if val10 == 0 and val1 == 0:
+            return "Error, month=00"
+        elif val10 == 1 and val1 > 2:
+            return "Error: Month is greater than 12!"
+        elif (val1 > 9 and val10 <= 1):
+            return "Error: 1*digit of hour is > 9!"
+
         month = f"{val10}{val1}"
 
         return month
 
     def decode_day(self, bits, parity):
-        B_bit = int(parity[1])
+        b_bit = int(parity[1])
 
         bits10 = [bits[0][0], bits[1][0]]
         bits10 = list(map(int, bits10))
@@ -70,8 +83,13 @@ class Class_DecodeMSF60():
         bits1 = list(map(int, bits1))
         val1 = self.decode_BCD(bits1, 4)
 
-        # TBD check day > 0
-        # TBD check day <= 31
+        # check validity of digit values
+        if val10 == 0 and val1 == 0:
+            return ["Error, day=00", False]
+        if val10 == 3 and val1 > 1:
+            return ["Error: Hours are greater than 31!", False]
+        elif (val1 > 9 and val10 <= 2):
+            return ["Error: 1*digit of hour is > 9!", False]
 
         day = f"{val10}{val1}"
 
@@ -81,18 +99,20 @@ class Class_DecodeMSF60():
 
         day_parity = False
 
-        if comp_parity ^ B_bit == 1:
+        if comp_parity ^ b_bit == 1:
             day_parity = True
 
         return [day, day_parity]
 
     def decode_weekday(self, bits, parity):
-        B_bit = int(parity[1])
+        b_bit = int(parity[1])
 
         bits_w = [bits[0][0], bits[1][0], bits[2][0]]
         bits_w = list(map(int, bits_w))
         val = self.decode_BCD(bits_w, 3)
 
+        if val == 7:
+            return ["Error: Weekday does not exist!", False]
         weekday = self.weekdays[val]
 
         # compute odd parity
@@ -100,13 +120,13 @@ class Class_DecodeMSF60():
 
         weekday_parity = False
 
-        if comp_parity ^ B_bit == 1:
+        if comp_parity ^ b_bit == 1:
             weekday_parity = True
 
         return [weekday, weekday_parity]
 
     def decode_time(self, bits, parity):
-        B_bit = int(parity[1])
+        b_bit = int(parity[1])
 
         bits_hour = bits[0:6]
         bits_minute = bits[6:13]
@@ -124,7 +144,7 @@ class Class_DecodeMSF60():
 
         time_parity = False
 
-        if comp_parity ^ B_bit == 1:
+        if comp_parity ^ b_bit == 1:
             time_parity = True
 
         return [time, time_parity]
@@ -175,26 +195,22 @@ class Class_DecodeMSF60():
         return False
 
     def decode_summer_time(self, bit):
-        B_bit = int(bit[1])
+        b_bit = int(bit[1])
 
-        if B_bit == 1:
+        if b_bit == 1:
             return "Summer time."
-
-        elif B_bit == 0:
+        elif b_bit == 0:
             return "Winter time."
-
         else:
             return "Error: Summer-time!"
 
     def decode_summer_time_warning(self, bit):
-        B_bit = int(bit[1])
+        b_bit = int(bit[1])
 
-        if B_bit == 1:
-            return "Upcoming Summer time warning acive."
-
-        elif B_bit == 0:
+        if b_bit == 1:
+            return "Upcoming summer time warning active."
+        elif b_bit == 0:
             return "No upcoming summer time warning."
-
         else:
             return "Error: Summer-time warning!"
 
@@ -213,7 +229,6 @@ class Class_DecodeMSF60():
             return  output
 
         # NOTE first bits 01-16 are ignored here for now...
-
         [year, year_parity] = self.decode_year(bitstream[16:24],
                                                bitstream[53])
         month = self.decode_month(bitstream[24:29])
