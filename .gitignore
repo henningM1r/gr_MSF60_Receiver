@@ -1,5 +1,7 @@
 top_block*.py
 examples/MSF60_Receiver/*.py
+examples/MSF60_Channel/*.py
+examples/MSF60_Transmitter/*.py
 .coverage
 *__pycache__
 .idea/

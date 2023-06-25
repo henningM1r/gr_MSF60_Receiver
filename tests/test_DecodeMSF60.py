@@ -58,6 +58,7 @@ class Test_Class_DecodeMSF60(unittest.TestCase):
         result = self.my_decoder.decode_BCD(bits, 4)
         objective = "?"
         self.assertEqual(objective, result)
+
     def test_decode_year(self):
         # positive test - year == 23
         bits = ["00", "00", "10", "00", "00", "00", "10", "10"]
@@ -225,7 +226,6 @@ class Test_Class_DecodeMSF60(unittest.TestCase):
         result = self.my_decoder.decode_month(bits)
         objective = "Error: 1*digit of hour is > 9!"
         self.assertEqual(objective, result)
-        # TBD test parity
 
     def test_decode_minute_marker(self):
         # positive test - correct minute marker
@@ -242,15 +242,15 @@ class Test_Class_DecodeMSF60(unittest.TestCase):
 
     def test_decode_bitstream(self):
         # negative test - too many bits
-        bitstream = [0]*60
+        bitstream = [0]*61
         result = self.my_decoder.decode_bitstream(bitstream)
-        objective = "Decoding error\n#Received bits: 60\n"
+        objective = "Decoding error\n#Received bits: 61\n"
         self.assertEqual(objective, result)
 
         # negative test - too few bits
-        bitstream = [0]*58
+        bitstream = [0]*59
         result = self.my_decoder.decode_bitstream(bitstream)
-        objective = "Decoding error\n#Received bits: 58\n"
+        objective = "Decoding error\n#Received bits: 59\n"
         self.assertEqual(objective, result)
 
     def _mock_send_msg(self, msg):
@@ -262,9 +262,9 @@ class Test_Class_DecodeMSF60(unittest.TestCase):
         self.socket_sender.close()
         context.term()
 
-    def _mock_send_stream(self, stream, offset=0):
-        for i in range(1, len(stream)):
-            out_msg = f"{stream[i]}, {i + offset:02d}"
+    def _mock_send_stream(self, stream):
+        for i in range(0, len(stream)):
+            out_msg = f"{stream[i]}"
             self._mock_send_msg(out_msg)
 
     def test_consumer(self):
@@ -292,6 +292,150 @@ class Test_Class_DecodeMSF60(unittest.TestCase):
                     "01: 10\n" + \
                     "02: 11\n" + \
                     "03: 01\n"
+        self.assertEqual(objective, result.getvalue())
+
+        # full clean-up of decoder
+        del t_decoder
+
+        # positive test - too many bits before minute marker
+        # Create StringIO object to capture any print-outputs on stdout
+        result = StringIO()
+        sys.stdout = result
+
+        # run MSF60 decoder in a separate thread and start it
+        t_decoder = threading.Thread(target=self.my_decoder.consumer,
+                                     name='Thread-consumer')
+        t_decoder.start()
+
+        # send desired messages and exit-signal
+        stream = ["00"] * 61 + ["2"]
+        self._mock_send_stream(stream=stream)
+        self._mock_send_msg("___EOT")
+
+        # wait for decoder-thread to be completed
+        t_decoder.join()
+
+        objective = ""
+        for i in range(0, 61, 1):
+            objective += f"{i:02d}: 00\n"
+        objective += f"61: 2\n"
+        objective += "Error: Received more than 59 bits at new minute\n" + \
+                     "#Bits: 61\n"
+        self.assertEqual(objective, result.getvalue())
+
+        # full clean-up of decoder
+        del t_decoder
+
+        # positive test - too many bits before minute marker
+        # Create StringIO object to capture any print-outputs on stdout
+        result = StringIO()
+        sys.stdout = result
+
+        # run MSF60 decoder in a separate thread and start it
+        t_decoder = threading.Thread(target=self.my_decoder.consumer,
+                                     name='Thread-consumer')
+        t_decoder.start()
+
+        # send desired messages and exit-signal
+        stream = ["00"] * 58 + ["2"]
+        self._mock_send_stream(stream=stream)
+        self._mock_send_msg("___EOT")
+
+        # wait for decoder-thread to be completed
+        t_decoder.join()
+
+        objective = ""
+        for i in range(0, 58, 1):
+            objective += f"{i:02d}: 00\n"
+        objective += f"58: 2\n"
+        objective += "Error: Received less than 59 bits at new minute\n" + \
+                     "#Bits: 58\n"
+        self.assertEqual(objective, result.getvalue())
+
+        # full clean-up of decoder
+        del t_decoder
+
+        # positive test - too many bits before minute marker
+        # Create StringIO object to capture any print-outputs on stdout
+        result = StringIO()
+        sys.stdout = result
+
+        # run MSF60 decoder in a separate thread and start it
+        t_decoder = threading.Thread(target=self.my_decoder.consumer,
+                                     name='Thread-consumer')
+        t_decoder.start()
+
+        # send desired messages and exit-signal
+        stream = ["11"] + ["00"] * 59 + ["2"]
+        self._mock_send_stream(stream=stream)
+        self._mock_send_msg("___EOT")
+
+        # wait for decoder-thread to be completed
+        t_decoder.join()
+
+        objective = "00: 11\n"
+        for i in range(1, 60, 1):
+            objective += f"{i:02d}: 00\n"
+        objective += f"60: 2\n"
+        objective += "\n=== Minute decoded ===\n" +\
+            "00: Start-bit detected 11.\n" +\
+            "17-35: Date is Error, day=00-Error, month=00-00.\n" +\
+            "36-38: Weekday is Sunday.\n" +\
+            "39-51: Time of day is 00:00h.\n" +\
+            "53: No upcoming summer time warning.\n" +\
+            "54: Parity of year matches: False\n" +\
+            "55: Parity of day matches: False\n" +\
+            "56: Parity of weekday matches: False\n" +\
+            "57: Parity of time of day matches: False\n" +\
+            "58: Winter time.\n" +\
+            "52-59: Minute marker 01111110 detected: False\n" +\
+            "======================\n"
+        self.assertEqual(objective, result.getvalue())
+
+        # full clean-up of decoder
+        del t_decoder
+
+        # positive test - ordinary time
+        # Create StringIO object to capture any print-outputs on stdout
+        result = StringIO()
+        sys.stdout = result
+
+        # run MSF60 decoder in a separate thread and start it
+        t_decoder = threading.Thread(target=self.my_decoder.consumer,
+                                     name='Thread-consumer')
+        t_decoder.start()
+
+        # send desired messages and exit-signal
+        stream = ["11","00","00","00","00","00","00","00","00","00",
+                  "00","00","00","00","00","00","00","00","00","10",
+                  "00","00","00","10","10","00","00","10","10","00",
+                  "10","00","00","10","00","10","00","00","00","00",
+                  "10","00","00","10","00","00","10","00","00","00",
+                  "00","10","00","10","10","10","11","11","11","00",
+                  "2"]
+        self._mock_send_stream(stream=stream)
+        self._mock_send_msg("___EOT")
+
+        # wait for decoder-thread to be completed
+        t_decoder.join()
+
+        objective = ""
+        for i in range(0, 60, 1):
+            objective += f"{i:02d}: {stream[i]}\n"
+        objective += f"60: 2\n"
+        objective += "\n=== Minute decoded ===\n" + \
+                     "00: Start-bit detected 11.\n" + \
+                     "17-35: Date is 25-06-23.\n" + \
+                     "36-38: Weekday is Sunday.\n" + \
+                     "39-51: Time of day is 12:21h.\n" + \
+                     "53: No upcoming summer time warning.\n" + \
+                     "54: Parity of year matches: True\n" + \
+                     "55: Parity of day matches: True\n" + \
+                     "56: Parity of weekday matches: True\n" + \
+                     "57: Parity of time of day matches: True\n" + \
+                     "58: Summer time.\n" + \
+                     "52-59: Minute marker 01111110 detected: True\n" + \
+                     "======================\n"
         self.assertEqual(objective, result.getvalue())
 
         # full clean-up of decoder

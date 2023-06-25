@@ -186,7 +186,7 @@ class Class_DecodeMSF60():
         bits_mm = list(map(int, [bits[0][0], bits[1][0], bits[2][0],
                    bits[3][0], bits[4][0], bits[5][0],
                    bits[6][0], bits[7][0]]))
-        minute_marker = [0,1,1,1,1,1,1,0]
+        minute_marker = [0, 1, 1, 1, 1, 1, 1, 0]
 
         if bits_mm == minute_marker:
             # Minute marker detected successfully
@@ -216,31 +216,30 @@ class Class_DecodeMSF60():
 
     def decode_bitstream(self, bitstream):
         output = ""
-
         count = len(bitstream)
 
-        if count != 59:
+        if count != 60:
             output += "Decoding error\n"
             output += f"#Received bits: {len(bitstream)}\n"
             return output
 
-        if bitstream[0] != "00":
+        if bitstream[0] != "11":
             output += "00: Minute marker is not 11!"
-            return  output
+            return output
 
-        # NOTE first bits 01-16 are ignored here for now...
-        [year, year_parity] = self.decode_year(bitstream[16:24],
-                                               bitstream[53])
-        month = self.decode_month(bitstream[24:29])
-        [day, day_parity] = self.decode_day(bitstream[29:35], bitstream[54])
-        [weekday, weekday_parity] = self.decode_weekday(bitstream[35:38],
-                                                        bitstream[55])
-        [time, time_parity] = self.decode_time(bitstream[38:52],
-                                               bitstream[56])
-        minute_marker = self.decode_minute_marker(bitstream[51:59])
-        summer_time_warning = self.decode_summer_time_warning(bitstream[52])
-        summer_time = self.decode_summer_time(bitstream[57])
-        minute_marker = self.decode_minute_marker(bitstream[51:59])
+        # NOTE DUT1 bits 01-16 are ignored here for now...
+        [year, year_parity] = self.decode_year(bitstream[17:25],
+                                               bitstream[54])
+        month = self.decode_month(bitstream[25:30])
+        [day, day_parity] = self.decode_day(bitstream[30:36], bitstream[55])
+        [weekday, weekday_parity] = self.decode_weekday(bitstream[36:39],
+                                                        bitstream[56])
+        [time, time_parity] = self.decode_time(bitstream[39:52],
+                                               bitstream[57])
+        minute_marker = self.decode_minute_marker(bitstream[52:60])
+        summer_time_warning = self.decode_summer_time_warning(bitstream[53])
+        summer_time = self.decode_summer_time(bitstream[58])
+        minute_marker = self.decode_minute_marker(bitstream[52:60])
 
         output += "\n=== Minute decoded ===\n"
         output += f"00: Start-bit detected {bitstream[0]}.\n"
@@ -294,41 +293,43 @@ class Class_DecodeMSF60():
                 count += 1
                 continue
 
-            # NOTE, never encountered this codeword yet...
+            # NOTE, this particular codeword has not been encountered yet ...
             elif received_msg == "01":
                 bitstream.append("01")
                 count += 1
                 continue
 
             # derive current time and date from the bitstream
-            elif received_msg == "2" and count == 59:
+            elif received_msg == "2" and count == 60:
                 output = self.decode_bitstream(bitstream)
                 print(output)
 
+                # append minute marker at first position 00
                 bitstream = []
-
-                count = 0
+                bitstream.append("11")
+                count = 1
                 continue
 
             # either too few or to many bits have
             # been received during the decoding step
             elif (received_msg == "2" and
-                  count > 59):
-                print("Error: Received more than 59 bits at new minute")
+                  count > 60):
+                print("Error: Received more than 60 bits at new minute")
                 print(f"#Bits: {len(bitstream)}")
 
                 bitstream = []
-                count = 0
+                bitstream.append("11")
+                count = 1
                 continue
-            # either too few or to many bits have
-            # been received during the decoding step
+
             elif (received_msg == "2" and
-                  count < 59):
-                print("Error: Received less than 59 bits at new minute")
+                  count < 60):
+                print("Error: Received less than 60 bits at new minute")
                 print(f"#Bits: {len(bitstream)}")
 
                 bitstream = []
-                count = 0
+                bitstream.append("11")
+                count = 1
                 continue
 
 
